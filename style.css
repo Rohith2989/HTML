@@ -1,0 +1,26 @@
+body{
+
+background-color: #414141;
+
+
+}
+
+
+div{
+
+margin-bottom: 50px;
+margin-top: 50px;
+background-color: rgb(179, 99, 99);
+border: rgb(122, 122, 211) solid;
+
+}
+
+p{
+
+border: rgb(110, 110, 189) solid;
+
+overflow: auto;
+height: 50px;
+width: auto;
+
+}
