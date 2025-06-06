@@ -1,0 +1,3860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DS Lab Internal Exam Programs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #16a085;
+        }
+        pre {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-left: 3px solid #f36d33;
+            color: #000;
+            page-break-inside: avoid;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 15px;
+            line-height: 1.4;
+            overflow: auto;
+            padding: 1em 1.5em;
+            display: block;
+            word-wrap: break-word;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .menu-note {
+            background-color: #e8f6f3;
+            border-left: 4px solid #1abc9c;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        .important {
+            color: #c0392b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>DS Lab Internal Exam Programs (Simple C Implementations)</h1>
+    <p class="menu-note">
+        <strong>Note:</strong> All programs are designed to be very simple and easy to understand. 
+        They use functions for operations and a menu in the <code>main</code> function for interaction.
+        Error handling is basic. For array-based structures, a fixed <code>MAX_SIZE</code> is used.
+    </p>
+
+    <!-- SIMPLE PROGRAMS -->
+    <h2>SIMPLE PROGRAMS</h2>
+
+    <!-- Program 1: 1D Array Operations -->
+    <h2>1. 1D Array Operations (INSERT, DELETE, SEARCH, TRAVERSE)</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For exit()
+
+#define MAX_SIZE 10 // Maximum size of the array
+
+// Global array and its current size
+int arr[MAX_SIZE];
+int n = 0; // Number of elements currently in the array
+
+// Function to insert an element at a specific position
+void insertElement() {
+    int pos, value;
+    if (n >= MAX_SIZE) {
+        printf("Array is full! Cannot insert.\n");
+        return;
+    }
+    printf("Enter position (1 to %d) to insert: ", n + 1);
+    scanf("%d", &pos);
+    printf("Enter value to insert: ");
+    scanf("%d", &value);
+
+    if (pos &lt; 1 || pos > n + 1) {
+        printf("Invalid position!\n");
+        return;
+    }
+
+    // Shift elements to the right
+    for (int i = n; i >= pos; i--) {
+        arr[i] = arr[i - 1];
+    }
+    arr[pos - 1] = value;
+    n++; // Increase the size of the array
+    printf("Element inserted successfully.\n");
+}
+
+// Function to delete an element from a specific position
+void deleteElement() {
+    int pos;
+    if (n == 0) {
+        printf("Array is empty! Cannot delete.\n");
+        return;
+    }
+    printf("Enter position (1 to %d) to delete: ", n);
+    scanf("%d", &pos);
+
+    if (pos &lt; 1 || pos > n) {
+        printf("Invalid position!\n");
+        return;
+    }
+
+    // Shift elements to the left
+    for (int i = pos - 1; i &lt; n - 1; i++) {
+        arr[i] = arr[i + 1];
+    }
+    n--; // Decrease the size of the array
+    printf("Element deleted successfully.\n");
+}
+
+// Function to search for an element
+void searchElement() {
+    int value, i;
+    if (n == 0) {
+        printf("Array is empty! Nothing to search.\n");
+        return;
+    }
+    printf("Enter value to search: ");
+    scanf("%d", &value);
+
+    for (i = 0; i &lt; n; i++) {
+        if (arr[i] == value) {
+            printf("Element %d found at position %d.\n", value, i + 1);
+            return;
+        }
+    }
+    printf("Element %d not found in the array.\n", value);
+}
+
+// Function to traverse (display) the array
+void traverseArray() {
+    if (n == 0) {
+        printf("Array is empty.\n");
+        return;
+    }
+    printf("Array elements are: ");
+    for (int i = 0; i &lt; n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\n--- 1D Array Operations Menu ---\n");
+        printf("1. Insert Element\n");
+        printf("2. Delete Element\n");
+        printf("3. Search Element\n");
+        printf("4. Traverse Array\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                insertElement();
+                break;
+            case 2:
+                deleteElement();
+                break;
+            case 3:
+                searchElement();
+                break;
+            case 4:
+                traverseArray();
+                break;
+            case 5:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 2: Self-referential Structure -->
+    <h2>2. Self-referential Structure</h2>
+    <p class="menu-note">
+        A self-referential structure is a structure that contains a member which is a pointer to the structure of its own kind.
+        This is fundamental for creating linked data structures like linked lists and trees.
+    </p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For malloc
+
+// Define a self-referential structure called 'Node'
+struct Node {
+    int data;           // Data part of the node
+    struct Node* next;  // Pointer to another 'Node' structure (self-reference)
+};
+
+int main() {
+    // We are not implementing full linked list operations here,
+    // just demonstrating the structure.
+    // For operations, see Program 4 (Single Linked List).
+
+    struct Node* node1;
+    struct Node* node2;
+
+    // Allocate memory for the nodes
+    node1 = (struct Node*)malloc(sizeof(struct Node));
+    node2 = (struct Node*)malloc(sizeof(struct Node));
+
+    if (node1 == NULL || node2 == NULL) {
+        printf("Memory allocation failed!\n");
+        return 1;
+    }
+
+    // Assign data to the first node
+    node1->data = 10;
+    // Link the first node to the second node
+    node1->next = node2;
+
+    // Assign data to the second node
+    node2->data = 20;
+    // The second node points to NULL, indicating the end of this small list
+    node2->next = NULL;
+
+    printf("--- Self-Referential Structure Demonstration ---\n");
+    printf("Data in node1: %d\n", node1->data);
+    if (node1->next != NULL) {
+        printf("Node1 points to node2 which has data: %d\n", node1->next->data);
+    }
+    printf("Data in node2: %d\n", node2->data);
+    if (node2->next == NULL) {
+        printf("Node2 points to NULL (end of list segment).\n");
+    }
+
+    // Free the allocated memory
+    free(node1);
+    free(node2);
+    
+    printf("\nThis program demonstrates the concept of a self-referential structure.\n");
+    printf("A menu is not applicable for this conceptual demonstration.\n");
+    printf("To see it in action, refer to linked list programs.\n");
+
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 3: Dynamic Memory Allocation -->
+    <h2>3. Dynamic Memory Allocation</h2>
+    <p class="menu-note">
+        Dynamic memory allocation allows programs to request memory from the operating system during runtime.
+        <code>malloc</code>, <code>calloc</code>, <code>realloc</code>, and <code>free</code> are key functions.
+    </p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For malloc, calloc, realloc, free
+
+// Function to demonstrate malloc
+void demoMalloc() {
+    int n;
+    int *ptr;
+    printf("--- Malloc Demonstration ---\n");
+    printf("Enter number of integers to allocate using malloc: ");
+    scanf("%d", &n);
+
+    ptr = (int*)malloc(n * sizeof(int)); // Allocate memory for n integers
+
+    if (ptr == NULL) {
+        printf("Memory allocation failed using malloc!\n");
+        return;
+    }
+
+    printf("Memory allocated successfully using malloc.\n");
+    // You can now use this memory, for example, to store numbers
+    for (int i = 0; i &lt; n; i++) {
+        ptr[i] = i + 1; // Assign some values
+    }
+    printf("Values stored: ");
+    for (int i = 0; i &lt; n; i++) {
+        printf("%d ", ptr[i]);
+    }
+    printf("\n");
+
+    free(ptr); // Always free allocated memory
+    printf("Memory freed.\n");
+}
+
+// Function to demonstrate calloc
+void demoCalloc() {
+    int n;
+    int *ptr;
+    printf("--- Calloc Demonstration ---\n");
+    printf("Enter number of integers to allocate using calloc: ");
+    scanf("%d", &n);
+
+    ptr = (int*)calloc(n, sizeof(int)); // Allocate memory for n integers, initialized to 0
+
+    if (ptr == NULL) {
+        printf("Memory allocation failed using calloc!\n");
+        return;
+    }
+
+    printf("Memory allocated successfully using calloc.\n");
+    printf("Initial values (should be 0): ");
+    for (int i = 0; i &lt; n; i++) {
+        printf("%d ", ptr[i]); // calloc initializes memory to zero
+    }
+    printf("\n");
+
+    free(ptr);
+    printf("Memory freed.\n");
+}
+
+// Function to demonstrate realloc
+void demoRealloc() {
+    int n1, n2;
+    int *ptr;
+    printf("--- Realloc Demonstration ---\n");
+    printf("Enter initial number of integers to allocate: ");
+    scanf("%d", &n1);
+
+    ptr = (int*)malloc(n1 * sizeof(int));
+    if (ptr == NULL) {
+        printf("Initial memory allocation failed!\n");
+        return;
+    }
+    printf("Allocated %d integers. Enter data:\n", n1);
+    for(int i=0; i&lt;n1; i++) {
+        printf("Enter element %d: ", i+1);
+        scanf("%d", &ptr[i]);
+    }
+
+    printf("Enter new number of integers for reallocation: ");
+    scanf("%d", &n2);
+
+    int *new_ptr = (int*)realloc(ptr, n2 * sizeof(int)); // Reallocate memory
+
+    if (new_ptr == NULL) {
+        printf("Memory reallocation failed! Original memory is still valid (if ptr was not NULL).\n");
+        // If realloc fails, ptr is still valid and needs to be freed
+        free(ptr); 
+        return;
+    }
+    ptr = new_ptr; // Update ptr to the new (or possibly same) memory location
+
+    printf("Memory reallocated successfully.\n");
+    printf("Current elements (first %d elements might be preserved):\n", (n1 < n2 ? n1 : n2));
+    for (int i = 0; i < (n1 < n2 ? n1 : n2) ; i++) { // Print preserved elements
+        printf("%d ", ptr[i]);
+    }
+    printf("\n");
+    if (n2 > n1) {
+        printf("Enter data for new elements (if any):\n");
+        for(int i=n1; i&lt;n2; i++) {
+            printf("Enter element %d: ", i+1);
+            scanf("%d", &ptr[i]);
+        }
+        printf("All elements after realloc and new input: ");
+        for(int i=0; i&lt;n2; i++) printf("%d ", ptr[i]);
+        printf("\n");
+    }
+
+
+    free(ptr); // Free the reallocated memory
+    printf("Memory freed.\n");
+}
+
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\n--- Dynamic Memory Allocation Menu ---\n");
+        printf("1. Demonstrate malloc()\n");
+        printf("2. Demonstrate calloc()\n");
+        printf("3. Demonstrate realloc()\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                demoMalloc();
+                break;
+            case 2:
+                demoCalloc();
+                break;
+            case 3:
+                demoRealloc();
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 4: Single Linked List -->
+    <h2>4. Single Linked List (Insertion, Deletion, Display)</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For malloc and free
+
+// Node structure for the linked list
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Global head pointer for the linked list
+struct Node* head = NULL;
+
+// Function to create a new node
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed!\n");
+        return NULL;
+    }
+    newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to insert a node at the beginning
+void insertAtBeginning() {
+    int value;
+    printf("Enter value to insert at the beginning: ");
+    scanf("%d", &value);
+    struct Node* newNode = createNode(value);
+    if (newNode == NULL) return;
+
+    newNode->next = head;
+    head = newNode;
+    printf("%d inserted at the beginning.\n", value);
+}
+
+// Function to insert a node at the end
+void insertAtEnd() {
+    int value;
+    printf("Enter value to insert at the end: ");
+    scanf("%d", &value);
+    struct Node* newNode = createNode(value);
+    if (newNode == NULL) return;
+
+    if (head == NULL) { // If list is empty
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+    printf("%d inserted at the end.\n", value);
+}
+
+// Function to delete a node from the beginning
+void deleteFromBeginning() {
+    if (head == NULL) {
+        printf("List is empty! Cannot delete.\n");
+        return;
+    }
+    struct Node* temp = head;
+    head = head->next;
+    printf("%d deleted from the beginning.\n", temp->data);
+    free(temp);
+}
+
+// Function to delete a node from the end
+void deleteFromEnd() {
+    if (head == NULL) {
+        printf("List is empty! Cannot delete.\n");
+        return;
+    }
+    if (head->next == NULL) { // Only one node
+        printf("%d deleted from the end.\n", head->data);
+        free(head);
+        head = NULL;
+        return;
+    }
+    struct Node* temp = head;
+    struct Node* prev = NULL;
+    while (temp->next != NULL) {
+        prev = temp;
+        temp = temp->next;
+    }
+    prev->next = NULL;
+    printf("%d deleted from the end.\n", temp->data);
+    free(temp);
+}
+
+// Function to display the linked list
+void displayList() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    printf("Linked List: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\n--- Single Linked List Menu ---\n");
+        printf("1. Insert at Beginning\n");
+        printf("2. Insert at End\n");
+        printf("3. Delete from Beginning\n");
+        printf("4. Delete from End\n");
+        printf("5. Display List\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                insertAtBeginning();
+                break;
+            case 2:
+                insertAtEnd();
+                break;
+            case 3:
+                deleteFromBeginning();
+                break;
+            case 4:
+                deleteFromEnd();
+                break;
+            case 5:
+                displayList();
+                break;
+            case 6:
+                printf("Exiting program.\n");
+                // Free all nodes before exiting to prevent memory leaks
+                while(head != NULL) {
+                    struct Node* temp = head;
+                    head = head->next;
+                    free(temp);
+                }
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 5: Reverse Single Linked List -->
+    <h2>5. Reverse the nodes of a Single Linked List</h2>
+    <p class="menu-note">This program builds upon the single linked list. You'll need to create a list first.</p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+// Node structure (same as Program 4)
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Global head pointer
+struct Node* head = NULL;
+
+// Function to create a new node (same as Program 4)
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed!\n");
+        return NULL;
+    }
+    newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to insert at the end (for easy list creation)
+void insertAtEndForDemo(int value) {
+    struct Node* newNode = createNode(value);
+    if (newNode == NULL) return;
+
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+
+// Function to display the list (same as Program 4)
+void displayList() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    printf("Linked List: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+// Function to reverse the linked list
+void reverseList() {
+    if (head == NULL || head->next == NULL) {
+        printf("List is empty or has only one node, no need to reverse.\n");
+        return;
+    }
+
+    struct Node* prevNode = NULL;
+    struct Node* currentNode = head;
+    struct Node* nextNode = NULL;
+
+    while (currentNode != NULL) {
+        nextNode = currentNode->next; // Store the next node
+        currentNode->next = prevNode; // Reverse the current node's pointer
+        prevNode = currentNode;       // Move prevNode one step forward
+        currentNode = nextNode;       // Move currentNode one step forward
+    }
+    head = prevNode; // The new head is the last node (which is now prevNode)
+    printf("List reversed successfully.\n");
+}
+
+int main() {
+    int choice, value;
+
+    // Let's add some initial nodes for demonstration
+    insertAtEndForDemo(10);
+    insertAtEndForDemo(20);
+    insertAtEndForDemo(30);
+    insertAtEndForDemo(40);
+
+    while (1) {
+        printf("\n--- Reverse Single Linked List Menu ---\n");
+        printf("1. Add element to list (at end for simplicity)\n");
+        printf("2. Display List\n");
+        printf("3. Reverse List\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to add: ");
+                scanf("%d", &value);
+                insertAtEndForDemo(value);
+                printf("%d added.\n", value);
+                break;
+            case 2:
+                displayList();
+                break;
+            case 3:
+                reverseList();
+                displayList(); // Display after reversing
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                while(head != NULL) {
+                    struct Node* temp = head;
+                    head = head->next;
+                    free(temp);
+                }
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 6: Stack using Arrays -->
+    <h2>6. Stack (its operations) using Arrays</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For exit()
+
+#define MAX_SIZE 5 // Maximum size of the stack
+
+// Global stack array and top pointer
+int stack[MAX_SIZE];
+int top = -1; // Stack is empty initially
+
+// Function to check if the stack is full
+int isFull() {
+    return top == MAX_SIZE - 1;
+}
+
+// Function to check if the stack is empty
+int isEmpty() {
+    return top == -1;
+}
+
+// Function to push (add) an element onto the stack
+void push() {
+    int value;
+    if (isFull()) {
+        printf("Stack Overflow! Cannot push element.\n");
+        return;
+    }
+    printf("Enter value to push: ");
+    scanf("%d", &value);
+    top = top + 1;
+    stack[top] = value;
+    printf("%d pushed onto the stack.\n", value);
+}
+
+// Function to pop (remove) an element from the stack
+void pop() {
+    if (isEmpty()) {
+        printf("Stack Underflow! Cannot pop element.\n");
+        return;
+    }
+    int value = stack[top];
+    top = top - 1;
+    printf("%d popped from the stack.\n", value);
+}
+
+// Function to peek (get the top element without removing)
+void peek() {
+    if (isEmpty()) {
+        printf("Stack is empty! Nothing to peek.\n");
+        return;
+    }
+    printf("Top element of the stack is: %d\n", stack[top]);
+}
+
+// Function to display the stack elements
+void displayStack() {
+    if (isEmpty()) {
+        printf("Stack is empty.\n");
+        return;
+    }
+    printf("Stack elements (from top to bottom): ");
+    for (int i = top; i >= 0; i--) {
+        printf("%d ", stack[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\n--- Stack Operations Menu (Array Implementation) ---\n");
+        printf("1. Push\n");
+        printf("2. Pop\n");
+        printf("3. Peek\n");
+        printf("4. Display Stack\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                push();
+                break;
+            case 2:
+                pop();
+                break;
+            case 3:
+                peek();
+                break;
+            case 4:
+                displayStack();
+                break;
+            case 5:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 7: Circular Queue using Arrays -->
+    <h2>7. Circular Queue (its operations) using Arrays</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For exit()
+
+#define MAX_SIZE 5 // Maximum size of the circular queue
+
+// Global circular queue array and front/rear pointers
+int cQueue[MAX_SIZE];
+int front = -1;
+int rear = -1;
+
+// Function to check if the circular queue is full
+int isFull() {
+    // Condition for full queue
+    return (front == 0 && rear == MAX_SIZE - 1) || (rear == (front - 1 + MAX_SIZE) % MAX_SIZE);
+}
+
+// Function to check if the circular queue is empty
+int isEmpty() {
+    return front == -1;
+}
+
+// Function to enqueue (add) an element to the circular queue
+void enqueue() {
+    int value;
+    if (isFull()) {
+        printf("Circular Queue is Full! Cannot enqueue.\n");
+        return;
+    }
+    printf("Enter value to enqueue: ");
+    scanf("%d", &value);
+
+    if (isEmpty()) { // If queue is initially empty
+        front = 0;
+        rear = 0;
+    } else if (rear == MAX_SIZE - 1 && front != 0) { // Rear is at end, but front is not at 0 (space at beginning)
+        rear = 0; // Wrap around
+    } else {
+        rear = rear + 1;
+    }
+    cQueue[rear] = value;
+    printf("%d enqueued to circular queue.\n", value);
+}
+
+// Function to dequeue (remove) an element from the circular queue
+void dequeue() {
+    if (isEmpty()) {
+        printf("Circular Queue is Empty! Cannot dequeue.\n");
+        return;
+    }
+    int value = cQueue[front];
+    printf("%d dequeued from circular queue.\n", value);
+
+    if (front == rear) { // If only one element was in the queue
+        front = -1;
+        rear = -1;
+    } else if (front == MAX_SIZE - 1) { // Front is at the end, wrap around
+        front = 0;
+    } else {
+        front = front + 1;
+    }
+}
+
+// Function to display the elements of the circular queue
+void displayCQueue() {
+    if (isEmpty()) {
+        printf("Circular Queue is empty.\n");
+        return;
+    }
+    printf("Circular Queue elements (from front to rear): ");
+    int i = front;
+    if (front &lt;= rear) { // Normal case
+        while (i &lt;= rear) {
+            printf("%d ", cQueue[i]);
+            i++;
+        }
+    } else { // When rear has wrapped around
+        while (i &lt;= MAX_SIZE - 1) { // Print from front to end of array
+            printf("%d ", cQueue[i]);
+            i++;
+        }
+        i = 0; // Reset i to start from beginning
+        while (i &lt;= rear) { // Print from beginning to rear
+            printf("%d ", cQueue[i]);
+            i++;
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\n--- Circular Queue Operations Menu (Array Implementation) ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Display Circular Queue\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                enqueue();
+                break;
+            case 2:
+                dequeue();
+                break;
+            case 3:
+                displayCQueue();
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 8: Stack ADT using Linked List -->
+    <h2>8. Stack ADT using Linked List</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For malloc, free, exit
+
+// Node structure for the stack elements
+struct StackNode {
+    int data;
+    struct StackNode* next;
+};
+
+// Global top pointer for the stack (points to the top-most node)
+struct StackNode* top = NULL;
+
+// Function to check if the stack is empty
+int isEmpty() {
+    return top == NULL;
+}
+
+// Function to push (add) an element onto the stack
+void push() {
+    int value;
+    printf("Enter value to push: ");
+    scanf("%d", &value);
+
+    // Create a new node
+    struct StackNode* newNode = (struct StackNode*)malloc(sizeof(struct StackNode));
+    if (newNode == NULL) {
+        printf("Stack Overflow! (Memory allocation failed)\n");
+        return;
+    }
+    newNode->data = value;
+    newNode->next = top; // New node points to the current top
+    top = newNode;       // New node becomes the top
+    printf("%d pushed onto the stack.\n", value);
+}
+
+// Function to pop (remove) an element from the stack
+void pop() {
+    if (isEmpty()) {
+        printf("Stack Underflow! Cannot pop element.\n");
+        return;
+    }
+    struct StackNode* temp = top;
+    int poppedValue = temp->data;
+    top = top->next; // Move top to the next node
+    free(temp);      // Free the popped node
+    printf("%d popped from the stack.\n", poppedValue);
+}
+
+// Function to peek (get the top element without removing)
+void peek() {
+    if (isEmpty()) {
+        printf("Stack is empty! Nothing to peek.\n");
+        return;
+    }
+    printf("Top element of the stack is: %d\n", top->data);
+}
+
+// Function to display the stack elements
+void displayStack() {
+    if (isEmpty()) {
+        printf("Stack is empty.\n");
+        return;
+    }
+    struct StackNode* temp = top;
+    printf("Stack elements (from top to bottom): ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\n--- Stack Operations Menu (Linked List Implementation) ---\n");
+        printf("1. Push\n");
+        printf("2. Pop\n");
+        printf("3. Peek\n");
+        printf("4. Display Stack\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                push();
+                break;
+            case 2:
+                pop();
+                break;
+            case 3:
+                peek();
+                break;
+            case 4:
+                displayStack();
+                break;
+            case 5:
+                printf("Exiting program.\n");
+                // Free all nodes before exiting
+                while(!isEmpty()){
+                    pop(); // Use pop to free nodes and avoid repeating free logic
+                }
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 9: Queue using Arrays (Linear Queue) -->
+    <h2>9. Queue (its operations) using Arrays (Linear Queue)</h2>
+    <p class="menu-note">This is a simple linear queue. It can suffer from a "false full" condition if not reset.
+       A circular queue (Program 7) is generally preferred for array-based queues.
+    </p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For exit()
+
+#define MAX_SIZE 5 // Maximum size of the queue
+
+// Global queue array and front/rear pointers
+int queue[MAX_SIZE];
+int front = -1; // Queue is empty initially
+int rear = -1;  // Queue is empty initially
+
+// Function to check if the queue is full
+int isFull() {
+    return rear == MAX_SIZE - 1;
+}
+
+// Function to check if the queue is empty
+int isEmpty() {
+    return front == -1 || front > rear;
+}
+
+// Function to enqueue (add) an element to the queue
+void enqueue() {
+    int value;
+    if (isFull()) {
+        printf("Queue is Full! Cannot enqueue.\n");
+        // Note: In a simple linear queue, even if front has moved,
+        // we can't reuse space without more complex logic (or making it circular).
+        return;
+    }
+    printf("Enter value to enqueue: ");
+    scanf("%d", &value);
+
+    if (isEmpty()) { // If queue is initially empty
+        front = 0;
+    }
+    rear = rear + 1;
+    queue[rear] = value;
+    printf("%d enqueued to queue.\n", value);
+}
+
+// Function to dequeue (remove) an element from the queue
+void dequeue() {
+    if (isEmpty()) {
+        printf("Queue is Empty! Cannot dequeue.\n");
+        return;
+    }
+    int value = queue[front];
+    front = front + 1;
+    printf("%d dequeued from queue.\n", value);
+
+    // Optional: Reset queue if it becomes empty after dequeue
+    if (front > rear) {
+        front = -1;
+        rear = -1;
+        printf("(Queue reset as it became empty)\n");
+    }
+}
+
+// Function to display the elements of the queue
+void displayQueue() {
+    if (isEmpty()) {
+        printf("Queue is empty.\n");
+        return;
+    }
+    printf("Queue elements (from front to rear): ");
+    for (int i = front; i &lt;= rear; i++) {
+        printf("%d ", queue[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\n--- Linear Queue Operations Menu (Array Implementation) ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Display Queue\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                enqueue();
+                break;
+            case 2:
+                dequeue();
+                break;
+            case 3:
+                displayQueue();
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 10: Queue ADT using Linked List -->
+    <h2>10. Queue ADT using Linked List</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For malloc, free, exit
+
+// Node structure for the queue elements
+struct QueueNode {
+    int data;
+    struct QueueNode* next;
+};
+
+// Global front and rear pointers for the queue
+struct QueueNode* front = NULL;
+struct QueueNode* rear = NULL;
+
+// Function to check if the queue is empty
+int isEmpty() {
+    return front == NULL;
+}
+
+// Function to enqueue (add) an element to the queue
+void enqueue() {
+    int value;
+    printf("Enter value to enqueue: ");
+    scanf("%d", &value);
+
+    // Create a new node
+    struct QueueNode* newNode = (struct QueueNode*)malloc(sizeof(struct QueueNode));
+    if (newNode == NULL) {
+        printf("Queue is Full! (Memory allocation failed)\n");
+        return;
+    }
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (isEmpty()) { // If queue is initially empty
+        front = newNode;
+        rear = newNode;
+    } else {
+        rear->next = newNode; // Link the current rear to the new node
+        rear = newNode;       // New node becomes the rear
+    }
+    printf("%d enqueued to queue.\n", value);
+}
+
+// Function to dequeue (remove) an element from the queue
+void dequeue() {
+    if (isEmpty()) {
+        printf("Queue is Empty! Cannot dequeue.\n");
+        return;
+    }
+    struct QueueNode* temp = front;
+    int dequeuedValue = temp->data;
+
+    front = front->next; // Move front to the next node
+
+    if (front == NULL) { // If queue becomes empty after dequeue
+        rear = NULL;
+    }
+    free(temp); // Free the dequeued node
+    printf("%d dequeued from queue.\n", dequeuedValue);
+}
+
+// Function to display the elements of the queue
+void displayQueue() {
+    if (isEmpty()) {
+        printf("Queue is empty.\n");
+        return;
+    }
+    struct QueueNode* temp = front;
+    printf("Queue elements (from front to rear): ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\n--- Queue Operations Menu (Linked List Implementation) ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Display Queue\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                enqueue();
+                break;
+            case 2:
+                dequeue();
+                break;
+            case 3:
+                displayQueue();
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                 // Free all nodes before exiting
+                while(!isEmpty()){
+                    dequeue(); // Use dequeue to free nodes
+                }
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 11: Hash Methods (Division, Folding) -->
+    <h2>11. Hash Methods (Division method, Folding method)</h2>
+    <p class="menu-note">These are simple hash functions. Collisions are not handled here; this program just demonstrates the hash value calculation.</p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For exit()
+
+#define TABLE_SIZE 10 // Example table size
+
+// Hash function using Division Method
+int divisionMethod(int key) {
+    return key % TABLE_SIZE;
+}
+
+// Hash function using Folding Method (simple sum of digits for demonstration)
+// A more common folding method might split the number into parts and sum them.
+// This one sums individual digits.
+int foldingMethod(int key) {
+    int sum = 0;
+    int tempKey = key;
+
+    // Example: key = 12345. Parts could be 12, 34, 5. Sum = 12+34+5 = 51. Hash = 51 % TABLE_SIZE
+    // For simplicity, let's assume a simple sum of parts.
+    // If key is 12345, parts are 123 and 45 (assuming 3-digit parts)
+    // Or, sum of digits: 1+2+3+4+5 = 15. Hash = 15 % TABLE_SIZE
+    
+    // Simple sum of digits:
+    while (tempKey > 0) {
+        sum += tempKey % 10; // Add the last digit
+        tempKey /= 10;       // Remove the last digit
+    }
+    return sum % TABLE_SIZE;
+
+    /*
+    // Alternative Folding: Sum of K-digit parts (e.g. 2-digit parts for a 5-digit number)
+    // Example: key = 12345, TABLE_SIZE = 10
+    // Parts: 12, 34, 05 (pad if necessary or handle last part)
+    // sum = 12 + 34 + 5 = 51
+    // hash_index = 51 % 10 = 1
+    int num_str[20]; // buffer for string
+    sprintf(num_str, "%d", key); // convert int to string
+    int len = strlen(num_str);
+    int k = 2; // size of each part (can be chosen based on table size)
+    int current_sum = 0;
+    
+    for (int i = 0; i < len; i += k) {
+        int part_val = 0;
+        char part_str[k+1];
+        strncpy(part_str, num_str + i, k);
+        part_str[k] = '\0'; // Null terminate
+        if (i + k > len) { // Handle the last part if it's smaller than k
+            strncpy(part_str, num_str + i, len - i);
+            part_str[len-i] = '\0';
+        }
+        sscanf(part_str, "%d", &part_val);
+        current_sum += part_val;
+    }
+    return current_sum % TABLE_SIZE;
+    */
+}
+
+
+int main() {
+    int choice, key, hashValue;
+    printf("Hash Table Size is: %d\n", TABLE_SIZE);
+
+    while (1) {
+        printf("\n--- Hash Method Demonstration Menu ---\n");
+        printf("1. Calculate Hash using Division Method\n");
+        printf("2. Calculate Hash using Folding Method (Sum of Digits)\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        if (choice == 3) {
+            printf("Exiting program.\n");
+            exit(0);
+        }
+        if (choice != 1 && choice != 2) {
+            printf("Invalid choice! Please try again.\n");
+            continue;
+        }
+
+        printf("Enter key (integer value): ");
+        scanf("%d", &key);
+
+        switch (choice) {
+            case 1:
+                hashValue = divisionMethod(key);
+                printf("Division Method: Hash value for key %d is %d\n", key, hashValue);
+                break;
+            case 2:
+                hashValue = foldingMethod(key);
+                printf("Folding Method (Sum of Digits): Hash value for key %d is %d\n", key, hashValue);
+                break;
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 12: Quadratic Probing -->
+    <h2>12. Quadratic Probing Collision Resolving Technique</h2>
+    <p class="menu-note">Hash(x) = key mod TableSize. If collision, H(x) = (Hash(x) + F(i)) mod TableSize, where F(i) = i<sup>2</sup>.</p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For exit()
+
+#define TABLE_SIZE 10 // Example Table Size
+#define EMPTY -1      // Marker for an empty slot in the hash table
+
+int hashTable[TABLE_SIZE];
+
+// Initialize hash table with EMPTY marker
+void initializeHashTable() {
+    for (int i = 0; i &lt; TABLE_SIZE; i++) {
+        hashTable[i] = EMPTY;
+    }
+}
+
+// Hash function: key mod TableSize
+int hashFunction(int key) {
+    return key % TABLE_SIZE;
+}
+
+// Function to insert a key using quadratic probing
+void insertKey() {
+    int key, index, i, h_dash;
+    printf("Enter key to insert: ");
+    scanf("%d", &key);
+
+    index = hashFunction(key); // Initial hash index
+
+    for (i = 0; i &lt; TABLE_SIZE; i++) { // Try for TABLE_SIZE iterations at most
+        h_dash = (index + i * i) % TABLE_SIZE; // Quadratic probing: F(i) = i*i
+
+        if (hashTable[h_dash] == EMPTY) {
+            hashTable[h_dash] = key;
+            printf("Key %d inserted at index %d.\n", key, h_dash);
+            return;
+        }
+    }
+    printf("Could not insert key %d. Hash table might be full or too many collisions.\n", key);
+}
+
+// Function to search for a key
+void searchKey() {
+    int key, index, i, h_dash;
+    printf("Enter key to search: ");
+    scanf("%d", &key);
+
+    index = hashFunction(key); // Initial hash index
+
+    for (i = 0; i &lt; TABLE_SIZE; i++) {
+        h_dash = (index + i * i) % TABLE_SIZE;
+
+        if (hashTable[h_dash] == key) {
+            printf("Key %d found at index %d.\n", key, h_dash);
+            return;
+        }
+        if (hashTable[h_dash] == EMPTY) { // If we find an empty slot, key was not inserted further
+            printf("Key %d not found.\n", key);
+            return;
+        }
+    }
+    printf("Key %d not found (searched entire probe sequence).\n", key);
+}
+
+// Function to display the hash table
+void displayHashTable() {
+    printf("Hash Table:\n");
+    for (int i = 0; i &lt; TABLE_SIZE; i++) {
+        printf("Index %d: ", i);
+        if (hashTable[i] == EMPTY) {
+            printf("EMPTY\n");
+        } else {
+            printf("%d\n", hashTable[i]);
+        }
+    }
+}
+
+int main() {
+    initializeHashTable();
+    int choice;
+
+    while (1) {
+        printf("\n--- Quadratic Probing Menu ---\n");
+        printf("Hash Table Size: %d\n", TABLE_SIZE);
+        printf("1. Insert Key\n");
+        printf("2. Search Key\n");
+        printf("3. Display Hash Table\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                insertKey();
+                break;
+            case 2:
+                searchKey();
+                break;
+            case 3:
+                displayHashTable();
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 13: Linear Probing -->
+    <h2>13. Linear Probing Collision Resolving Technique</h2>
+    <p class="menu-note">Hash(x) = key mod TableSize. If collision, H(x) = (Hash(x) + i) mod TableSize.</p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For exit()
+
+#define TABLE_SIZE 10 // Example Table Size
+#define EMPTY -1      // Marker for an empty slot
+
+int hashTable[TABLE_SIZE];
+
+// Initialize hash table
+void initializeHashTable() {
+    for (int i = 0; i &lt; TABLE_SIZE; i++) {
+        hashTable[i] = EMPTY;
+    }
+}
+
+// Hash function
+int hashFunction(int key) {
+    return key % TABLE_SIZE;
+}
+
+// Function to insert a key using linear probing
+void insertKey() {
+    int key, index, i, h_dash;
+    printf("Enter key to insert: ");
+    scanf("%d", &key);
+
+    index = hashFunction(key); // Initial hash index
+
+    for (i = 0; i &lt; TABLE_SIZE; i++) { // Try for TABLE_SIZE iterations
+        h_dash = (index + i) % TABLE_SIZE; // Linear probing: F(i) = i
+
+        if (hashTable[h_dash] == EMPTY) {
+            hashTable[h_dash] = key;
+            printf("Key %d inserted at index %d.\n", key, h_dash);
+            return;
+        }
+    }
+    printf("Could not insert key %d. Hash table might be full.\n", key);
+}
+
+// Function to search for a key
+void searchKey() {
+    int key, index, i, h_dash;
+    printf("Enter key to search: ");
+    scanf("%d", &key);
+
+    index = hashFunction(key);
+
+    for (i = 0; i &lt; TABLE_SIZE; i++) {
+        h_dash = (index + i) % TABLE_SIZE;
+
+        if (hashTable[h_dash] == key) {
+            printf("Key %d found at index %d.\n", key, h_dash);
+            return;
+        }
+        if (hashTable[h_dash] == EMPTY) { // If empty slot found, key isn't there
+            printf("Key %d not found.\n", key);
+            return;
+        }
+    }
+    printf("Key %d not found (searched entire table or probe sequence).\n", key);
+}
+
+// Function to display the hash table
+void displayHashTable() {
+    printf("Hash Table:\n");
+    for (int i = 0; i &lt; TABLE_SIZE; i++) {
+        printf("Index %d: ", i);
+        if (hashTable[i] == EMPTY) {
+            printf("EMPTY\n");
+        } else {
+            printf("%d\n", hashTable[i]);
+        }
+    }
+}
+
+int main() {
+    initializeHashTable();
+    int choice;
+
+    while (1) {
+        printf("\n--- Linear Probing Menu ---\n");
+        printf("Hash Table Size: %d\n", TABLE_SIZE);
+        printf("1. Insert Key\n");
+        printf("2. Search Key\n");
+        printf("3. Display Hash Table\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                insertKey();
+                break;
+            case 2:
+                searchKey();
+                break;
+            case 3:
+                displayHashTable();
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 14: Height of a Binary Tree -->
+    <h2>14. Height of a Binary Tree</h2>
+    <p class="menu-note">
+        The height of a tree is the number of edges on the longest path from the root to a leaf.
+        The height of an empty tree is often defined as -1, and a tree with a single node as 0.
+    </p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For malloc, free, exit
+
+// Tree Node structure
+struct TreeNode {
+    int data;
+    struct TreeNode* left;
+    struct TreeNode* right;
+};
+
+// Function to create a new tree node
+struct TreeNode* createTreeNode(int value) {
+    struct TreeNode* newNode = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    if (newNode == NULL) {
+        printf("Memory allocation failed!\n");
+        return NULL;
+    }
+    newNode->data = value;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+// Function to insert a node into a Binary Search Tree (for easy tree creation)
+// This is a simple BST insert, not balanced.
+struct TreeNode* insertNode(struct TreeNode* root, int value) {
+    if (root == NULL) { // If the tree is empty, create a new node as root
+        return createTreeNode(value);
+    }
+    // Otherwise, recur down the tree
+    if (value &lt; root->data) {
+        root->left = insertNode(root->left, value);
+    } else if (value > root->data) {
+        root->right = insertNode(root->right, value);
+    }
+    // If value is equal, do nothing (or handle as per requirement, e.g., update)
+    return root; // Return the (unchanged) node pointer
+}
+
+// Function to find the maximum of two integers
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+// Function to calculate the height of a binary tree
+int findHeight(struct TreeNode* root) {
+    if (root == NULL) {
+        return -1; // Height of an empty tree is -1 (or 0 if defining height by nodes)
+                   // Using -1 is common for edge-based height.
+    }
+    int leftHeight = findHeight(root->left);
+    int rightHeight = findHeight(root->right);
+    return 1 + max(leftHeight, rightHeight);
+}
+
+// Function to free the tree (post-order traversal for deletion)
+void freeTree(struct TreeNode* root) {
+    if (root == NULL) return;
+    freeTree(root->left);
+    freeTree(root->right);
+    free(root);
+}
+
+
+int main() {
+    struct TreeNode* root = NULL; // Initially, the tree is empty
+    int choice, value;
+
+    while (1) {
+        printf("\n--- Binary Tree Height Menu ---\n");
+        printf("1. Insert Node (into BST for testing)\n");
+        printf("2. Calculate Height of the Tree\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                root = insertNode(root, value);
+                printf("%d inserted.\n", value);
+                break;
+            case 2:
+                if (root == NULL) {
+                    printf("Tree is empty. Height is -1.\n");
+                } else {
+                    int height = findHeight(root);
+                    printf("Height of the binary tree is: %d\n", height);
+                }
+                break;
+            case 3:
+                printf("Exiting program.\n");
+                freeTree(root); // Free allocated memory
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- COMPLEX PROGRAMS -->
+    <h2>COMPLEX PROGRAMS (Simplified for clarity)</h2>
+    <p class="menu-note">These programs implement more complex data structures and algorithms.
+        While functional, they are simplified for educational purposes and may lack extensive error handling or optimizations found in production code.
+    </p>
+
+    <!-- Program 1 (Complex): Doubly Linked List -->
+    <h2>1. Doubly Linked List (Creation, Insertion, Deletion, Traversal)</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+// Node structure for Doubly Linked List
+struct Node {
+    int data;
+    struct Node* prev;
+    struct Node* next;
+};
+
+struct Node* head = NULL; // Global head pointer
+
+// Function to create a new node
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (!newNode) {
+        printf("Memory allocation failed!\n");
+        return NULL;
+    }
+    newNode->data = value;
+    newNode->prev = NULL;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function for creation (inserting at the end)
+void createList() {
+    int value;
+    printf("Enter value to insert at end: ");
+    scanf("%d", &value);
+    struct Node* newNode = createNode(value);
+    if (!newNode) return;
+
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+        newNode->prev = temp;
+    }
+    printf("%d inserted at the end.\n", value);
+}
+
+// Function to insert at the beginning
+void insertAtBeginning() {
+    int value;
+    printf("Enter value to insert at beginning: ");
+    scanf("%d", &value);
+    struct Node* newNode = createNode(value);
+    if (!newNode) return;
+
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        newNode->next = head;
+        head->prev = newNode;
+        head = newNode;
+    }
+    printf("%d inserted at the beginning.\n", value);
+}
+
+// Function to insert at a specific position (1-based indexing)
+void insertAtPosition() {
+    int value, pos, k = 1;
+    printf("Enter value to insert: ");
+    scanf("%d", &value);
+    printf("Enter position (1-based): ");
+    scanf("%d", &pos);
+
+    if (pos &lt; 1) {
+        printf("Invalid position.\n");
+        return;
+    }
+    if (pos == 1) { // Insert at beginning
+        struct Node* newNode = createNode(value);
+        if(!newNode) return;
+        if (head == NULL) head = newNode;
+        else {
+            newNode->next = head;
+            head->prev = newNode;
+            head = newNode;
+        }
+        printf("%d inserted at position %d.\n", value, pos);
+        return;
+    }
+
+    struct Node* newNode = createNode(value);
+    if(!newNode) return;
+    struct Node* temp = head;
+    while (temp != NULL && k &lt; pos -1) { // Traverse to node before insertion point
+        temp = temp->next;
+        k++;
+    }
+
+    if (temp == NULL && k != pos -1) { // Position out of bounds (too large)
+        printf("Position out of bounds.\n");
+        free(newNode); // Free the allocated node as it won't be used
+        return;
+    }
+    
+    if (temp == NULL && pos > 1) { // Trying to insert after last element, but list is empty or pos is too large
+         printf("Position out of bounds or list empty and pos > 1.\n");
+         free(newNode);
+         return;
+    }
+
+
+    if (temp != NULL) { // General case: insert in middle or at end (if temp is last node)
+        newNode->next = temp->next;
+        newNode->prev = temp;
+        if (temp->next != NULL) { // If not inserting at the very end
+            temp->next->prev = newNode;
+        }
+        temp->next = newNode;
+        printf("%d inserted at position %d.\n", value, pos);
+    } else if (pos == k+1 && head != NULL) { // Inserting at the end of a non-empty list (temp became NULL after loop)
+        // This case should ideally be handled by createList/insertAtEnd, but let's refine the loop condition or logic
+        // Simpler: Traverse to (pos-1)th node. If it exists, insert.
+        // The previous loop logic has an edge case if temp becomes NULL when k < pos - 1,
+        // meaning the list is shorter than pos-1.
+        // Let's re-evaluate the loop. It should stop at the (pos-1)th node.
+        // If pos-1 is beyond list length, it's an error.
+        printf("Error in insertion logic, or position out of bounds.\n");
+        free(newNode);
+    } else { // List is shorter than pos-1.
+         printf("Position out of bounds.\n");
+         free(newNode);
+    }
+}
+
+
+// Function to delete from the beginning
+void deleteFromBeginning() {
+    if (head == NULL) {
+        printf("List is empty. Cannot delete.\n");
+        return;
+    }
+    struct Node* temp = head;
+    head = head->next;
+    if (head != NULL) {
+        head->prev = NULL;
+    }
+    printf("%d deleted from beginning.\n", temp->data);
+    free(temp);
+}
+
+// Function to delete from the end
+void deleteFromEnd() {
+    if (head == NULL) {
+        printf("List is empty. Cannot delete.\n");
+        return;
+    }
+    struct Node* temp = head;
+    if (temp->next == NULL) { // Only one node
+        head = NULL;
+    } else {
+        while (temp->next != NULL) {
+            temp = temp->next; // Go to last node
+        }
+        temp->prev->next = NULL; // Second last node's next becomes NULL
+    }
+    printf("%d deleted from end.\n", temp->data);
+    free(temp);
+}
+
+// Function to delete from a specific position (1-based indexing)
+void deleteAtPosition() {
+    int pos, k = 1;
+    if (head == NULL) {
+        printf("List is empty. Cannot delete.\n");
+        return;
+    }
+    printf("Enter position to delete (1-based): ");
+    scanf("%d", &pos);
+
+    if (pos &lt; 1) {
+        printf("Invalid position.\n");
+        return;
+    }
+    
+    struct Node* temp = head;
+    if (pos == 1) { // Delete first node
+        head = head->next;
+        if (head != NULL) {
+            head->prev = NULL;
+        }
+        printf("%d deleted from position %d.\n", temp->data, pos);
+        free(temp);
+        return;
+    }
+
+    while (temp != NULL && k &lt; pos) {
+        temp = temp->next;
+        k++;
+    }
+
+    if (temp == NULL) { // Position out of bounds
+        printf("Position out of bounds. Cannot delete.\n");
+        return;
+    }
+
+    // temp is the node to be deleted
+    temp->prev->next = temp->next;
+    if (temp->next != NULL) { // If it's not the last node
+        temp->next->prev = temp->prev;
+    }
+    printf("%d deleted from position %d.\n", temp->data, pos);
+    free(temp);
+}
+
+
+// Function to traverse and display the list (forward)
+void traverseForward() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    printf("List (Forward): NULL &lt;- ");
+    while (temp != NULL) {
+        printf("%d &lt;-> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+// Function to traverse and display the list (backward)
+void traverseBackward() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    // Go to the last node first
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    printf("List (Backward): NULL &lt;- ");
+    while (temp != NULL) {
+        printf("%d &lt;-> ", temp->data);
+        temp = temp->prev;
+    }
+    printf("NULL\n");
+}
+
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\n--- Doubly Linked List Menu ---\n");
+        printf("1. Create (Insert at End)\n");
+        printf("2. Insert at Beginning\n");
+        printf("3. Insert at Position\n");
+        printf("4. Delete from Beginning\n");
+        printf("5. Delete from End\n");
+        printf("6. Delete from Position\n");
+        printf("7. Traverse Forward\n");
+        printf("8. Traverse Backward\n");
+        printf("9. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: createList(); break;
+            case 2: insertAtBeginning(); break;
+            case 3: insertAtPosition(); break;
+            case 4: deleteFromBeginning(); break;
+            case 5: deleteFromEnd(); break;
+            case 6: deleteAtPosition(); break;
+            case 7: traverseForward(); break;
+            case 8: traverseBackward(); break;
+            case 9:
+                printf("Exiting program.\n");
+                // Free all nodes
+                while(head != NULL) {
+                    struct Node* temp = head;
+                    head = head->next;
+                    free(temp);
+                }
+                exit(0);
+            default: printf("Invalid choice.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 2 (Complex): Circular Linked List (Singly) -->
+    <h2>2. Circular Linked List (Singly - Creation, Insertion, Deletion, Traversal)</h2>
+    <p class="menu-note">Using a `last` pointer can simplify some operations in a circular linked list.</p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+// Node structure for Singly Circular Linked List
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* last = NULL; // Pointer to the last node
+
+// Function to create a new node
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (!newNode) {
+        printf("Memory allocation failed!\n");
+        return NULL;
+    }
+    newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function for creation (inserting into an empty list or at the end)
+void createListOrInsertEnd() {
+    int value;
+    printf("Enter value: ");
+    scanf("%d", &value);
+    struct Node* newNode = createNode(value);
+    if (!newNode) return;
+
+    if (last == NULL) { // List is empty
+        last = newNode;
+        last->next = last; // Points to itself
+        printf("%d inserted into empty list.\n", value);
+    } else { // List is not empty, insert after last
+        newNode->next = last->next; // New node points to the first node
+        last->next = newNode;       // Old last node points to the new node
+        last = newNode;             // New node becomes the last node
+        printf("%d inserted at the end.\n", value);
+    }
+}
+
+// Function to insert at the beginning
+void insertAtBeginning() {
+    int value;
+    printf("Enter value to insert at beginning: ");
+    scanf("%d", &value);
+    struct Node* newNode = createNode(value);
+    if (!newNode) return;
+
+    if (last == NULL) { // List is empty
+        last = newNode;
+        last->next = last;
+    } else {
+        newNode->next = last->next; // New node points to current first node
+        last->next = newNode;       // Last node points to the new first node
+    }
+    printf("%d inserted at the beginning.\n", value);
+}
+
+// Function to delete from the beginning
+void deleteFromBeginning() {
+    if (last == NULL) {
+        printf("List is empty. Cannot delete.\n");
+        return;
+    }
+    struct Node* temp = last->next; // Node to be deleted (first node)
+    printf("%d deleted from beginning.\n", temp->data);
+
+    if (last->next == last) { // Only one node in the list
+        last = NULL;
+    } else {
+        last->next = temp->next; // Last node now points to the second node
+    }
+    free(temp);
+}
+
+// Function to delete from the end
+void deleteFromEnd() {
+    if (last == NULL) {
+        printf("List is empty. Cannot delete.\n");
+        return;
+    }
+    struct Node* temp = last; // Node to be deleted (last node)
+    printf("%d deleted from end.\n", temp->data);
+
+    if (last->next == last) { // Only one node
+        last = NULL;
+        free(temp);
+    } else {
+        struct Node* current = last->next;
+        while (current->next != last) { // Find the second to last node
+            current = current->next;
+        }
+        current->next = last->next; // Second last node points to first node
+        last = current;             // Second last node becomes the new last
+        free(temp);
+    }
+}
+
+// Function to traverse and display the list
+void traverseList() {
+    if (last == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = last->next; // Start from the first node
+    printf("Circular List: ");
+    do {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    } while (temp != last->next); // Loop until we reach the first node again
+    printf("(loops back to %d)\n", last->next->data);
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\n--- Singly Circular Linked List Menu ---\n");
+        printf("1. Create/Insert at End\n");
+        printf("2. Insert at Beginning\n");
+        printf("3. Delete from Beginning\n");
+        printf("4. Delete from End\n");
+        printf("5. Traverse List\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: createListOrInsertEnd(); break;
+            case 2: insertAtBeginning(); break;
+            case 3: deleteFromBeginning(); break;
+            case 4: deleteFromEnd(); break;
+            case 5: traverseList(); break;
+            case 6:
+                printf("Exiting program.\n");
+                // Free all nodes
+                if (last != NULL) {
+                    struct Node* current = last->next;
+                    struct Node* nextNode;
+                    do {
+                        nextNode = current->next;
+                        free(current);
+                        current = nextNode;
+                    } while (current != last->next && last != NULL && current != last); // Careful with single node
+                     if (last != NULL && last->next == last) free(last); // Single node case
+                     else if (last != NULL) free(last); // free the last one if not freed by loop
+                }
+                exit(0);
+            default: printf("Invalid choice.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 3 (Complex): Infix to Postfix -->
+    <h2>3. Infix Expression to Postfix Expression</h2>
+    <p class="menu-note">This uses a simple array-based stack. Assumes valid infix expression and single-digit operands for simplicity, or operands separated by spaces (this code handles characters).</p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt; // For strlen
+#include &lt;ctype.h&gt;  // For isalnum
+
+#define MAX_EXPR_SIZE 100
+#define MAX_STACK_SIZE 100
+
+char stack[MAX_STACK_SIZE];
+int top = -1;
+
+// Stack push
+void push(char item) {
+    if (top >= MAX_STACK_SIZE - 1) {
+        printf("Stack Overflow.\n");
+        return;
+    }
+    stack[++top] = item;
+}
+
+// Stack pop
+char pop() {
+    if (top &lt; 0) {
+        printf("Stack Underflow.\n");
+        return -1; // Error indicator
+    }
+    return stack[top--];
+}
+
+// Operator precedence
+int precedence(char op) {
+    switch (op) {
+        case '+':
+        case '-':
+            return 1;
+        case '*':
+        case '/':
+            return 2;
+        case '^': // Exponentiation
+            return 3;
+    }
+    return -1; // For non-operators like '('
+}
+
+// Function to convert infix to postfix
+void infixToPostfix(char* infix, char* postfix) {
+    int i = 0, j = 0; // i for infix, j for postfix
+    char item, x;
+
+    push('('); // Push '(' onto stack and add ')' to infix expression
+    strcat(infix, ")"); // Append ')' to the end of infix expression
+
+    while (infix[i] != '\0') {
+        item = infix[i];
+        if (isalnum(item)) { // If operand
+            postfix[j++] = item;
+        } else if (item == '(') {
+            push(item);
+        } else if (item == ')') {
+            while ((x = pop()) != '(') {
+                postfix[j++] = x;
+            }
+        } else { // Operator
+            while (top != -1 && stack[top] != '(' && precedence(stack[top]) >= precedence(item)) {
+                postfix[j++] = pop();
+            }
+            push(item);
+        }
+        i++;
+    }
+    // At this point, the loop related to infix[i] != '\0' would have finished.
+    // The original algorithm usually pops remaining operators from stack after this.
+    // However, since we pushed '(' initially and added ')' to infix,
+    // the last ')' in infix will empty the stack until the initial '('.
+    
+    postfix[j] = '\0'; // Null-terminate postfix string
+}
+
+int main() {
+    char infix[MAX_EXPR_SIZE], postfix[MAX_EXPR_SIZE];
+
+    printf("\n--- Infix to Postfix Conversion ---\n");
+    printf("Enter infix expression (e.g., a+b*c-d, or (a+b)*c ): ");
+    scanf("%s", infix);
+
+    infixToPostfix(infix, postfix);
+
+    printf("Infix Expression: %s\n", infix); // Infix will have ')' appended
+    printf("Postfix Expression: %s\n", postfix);
+    
+    printf("\nNote: This program is simplified. Assumes valid input and single character operands/operators.\n");
+    printf("A menu is not typical for a single conversion task like this.\n");
+    printf("To run again, re-execute the program.\n");
+
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 4 (Complex): Postfix Evaluation -->
+    <h2>4. Postfix Expression Evaluation</h2>
+    <p class="menu-note">This uses a simple array-based stack for integers. Assumes single-digit operands for simplicity.</p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt; // For strlen
+#include &lt;ctype.h&gt;  // For isdigit
+
+#define MAX_EXPR_SIZE 100
+#define MAX_STACK_SIZE 100
+
+int stack[MAX_STACK_SIZE];
+int top = -1;
+
+// Stack push
+void push_eval(int item) {
+    if (top >= MAX_STACK_SIZE - 1) {
+        printf("Stack Overflow.\n");
+        return;
+    }
+    stack[++top] = item;
+}
+
+// Stack pop
+int pop_eval() {
+    if (top &lt; 0) {
+        printf("Stack Underflow or Invalid Postfix Expression.\n");
+        return -1; // Error indicator
+    }
+    return stack[top--];
+}
+
+// Function to evaluate postfix expression
+int evaluatePostfix(char* postfix) {
+    int i = 0;
+    char symbol;
+    int operand1, operand2, result;
+
+    while (postfix[i] != '\0') {
+        symbol = postfix[i];
+
+        if (isdigit(symbol)) {
+            push_eval(symbol - '0'); // Convert char digit to int
+        } else { // Operator
+            operand2 = pop_eval();
+            operand1 = pop_eval();
+            if (operand1 == -1 || operand2 == -1 && top < -1) { // Check for underflow from pop
+                 printf("Error in expression or stack operation.\n");
+                 return -9999; // Error code
+            }
+
+            switch (symbol) {
+                case '+': result = operand1 + operand2; break;
+                case '-': result = operand1 - operand2; break;
+                case '*': result = operand1 * operand2; break;
+                case '/': 
+                    if (operand2 == 0) {
+                        printf("Error: Division by zero!\n");
+                        return -9999; // Error code
+                    }
+                    result = operand1 / operand2; 
+                    break;
+                // case '^': // For exponentiation, you might need pow() from math.h
+                //    result = (int)pow((double)operand1, (double)operand2); break;
+                default: 
+                    printf("Invalid operator: %c\n", symbol);
+                    return -9999; // Error code
+            }
+            push_eval(result);
+        }
+        i++;
+    }
+    result = pop_eval();
+    if (top != -1) { // Stack should be empty except for the final result initially
+        printf("Invalid Postfix Expression (too many operands?).\n");
+        return -9999;
+    }
+    return result;
+}
+
+
+int main() {
+    char postfix[MAX_EXPR_SIZE];
+    int result;
+
+    printf("\n--- Postfix Expression Evaluation ---\n");
+    printf("Enter postfix expression (e.g., 23*5+, means (2*3)+5. Use single digits): ");
+    scanf("%s", postfix);
+
+    result = evaluatePostfix(postfix);
+
+    if (result != -9999) { // Check if evaluation was successful
+        printf("Postfix Expression: %s\n", postfix);
+        printf("Result of evaluation: %d\n", result);
+    }
+    
+    printf("\nNote: This program assumes single-digit operands and valid postfix input.\n");
+    printf("A menu is not typical for a single evaluation task like this.\n");
+    printf("To run again, re-execute the program.\n");
+
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 5 (Complex): Binary Search Tree -->
+    <h2>5. Binary Search Tree (Insertion, Deletion, Traversals)</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+struct TreeNode {
+    int data;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+
+// Function to create a new node
+struct TreeNode* createNodeBST(int value) {
+    struct TreeNode* newNode = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    newNode->data = value;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+// Function to insert a node in BST
+struct TreeNode* insertNodeBST(struct TreeNode* root, int value) {
+    if (root == NULL) {
+        return createNodeBST(value);
+    }
+    if (value &lt; root->data) {
+        root->left = insertNodeBST(root->left, value);
+    } else if (value > root->data) {
+        root->right = insertNodeBST(root->right, value);
+    }
+    // If value == root->data, do nothing (no duplicates, or handle as needed)
+    return root;
+}
+
+// Function to find the node with minimum value in a BST (used in deletion)
+struct TreeNode* findMin(struct TreeNode* root) {
+    while (root != NULL && root->left != NULL) {
+        root = root->left;
+    }
+    return root;
+}
+
+// Function to delete a node from BST
+struct TreeNode* deleteNodeBST(struct TreeNode* root, int value) {
+    if (root == NULL) return root;
+
+    if (value &lt; root->data) {
+        root->left = deleteNodeBST(root->left, value);
+    } else if (value > root->data) {
+        root->right = deleteNodeBST(root->right, value);
+    } else { // Node with the value to be deleted is found
+        // Case 1: Node with only one child or no child
+        if (root->left == NULL) {
+            struct TreeNode* temp = root->right;
+            free(root);
+            return temp;
+        } else if (root->right == NULL) {
+            struct TreeNode* temp = root->left;
+            free(root);
+            return temp;
+        }
+        // Case 2: Node with two children
+        // Get the inorder successor (smallest in the right subtree)
+        struct TreeNode* temp = findMin(root->right);
+        root->data = temp->data; // Copy the inorder successor's content to this node
+        root->right = deleteNodeBST(root->right, temp->data); // Delete the inorder successor
+    }
+    return root;
+}
+
+// Inorder Traversal (Left - Root - Right)
+void inorderTraversal(struct TreeNode* root) {
+    if (root != NULL) {
+        inorderTraversal(root->left);
+        printf("%d ", root->data);
+        inorderTraversal(root->right);
+    }
+}
+
+// Preorder Traversal (Root - Left - Right)
+void preorderTraversal(struct TreeNode* root) {
+    if (root != NULL) {
+        printf("%d ", root->data);
+        preorderTraversal(root->left);
+        preorderTraversal(root->right);
+    }
+}
+
+// Postorder Traversal (Left - Right - Root)
+void postorderTraversal(struct TreeNode* root) {
+    if (root != NULL) {
+        postorderTraversal(root->left);
+        postorderTraversal(root->right);
+        printf("%d ", root->data);
+    }
+}
+
+// Function to free the tree (post-order traversal for deletion)
+void freeTreeBST(struct TreeNode* root) {
+    if (root == NULL) return;
+    freeTreeBST(root->left);
+    freeTreeBST(root->right);
+    free(root);
+}
+
+int main() {
+    struct TreeNode* root = NULL;
+    int choice, value;
+
+    while (1) {
+        printf("\n\n--- Binary Search Tree (BST) Menu ---\n");
+        printf("1. Insert Node\n");
+        printf("2. Delete Node\n");
+        printf("3. Inorder Traversal\n");
+        printf("4. Preorder Traversal\n");
+        printf("5. Postorder Traversal\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                root = insertNodeBST(root, value);
+                printf("%d inserted.\n", value);
+                break;
+            case 2:
+                if (root == NULL) {
+                    printf("Tree is empty. Cannot delete.\n");
+                } else {
+                    printf("Enter value to delete: ");
+                    scanf("%d", &value);
+                    root = deleteNodeBST(root, value);
+                    // Note: deleteNodeBST will print if not found or indicate through structure
+                    printf("Attempted to delete %d. (Check traversals)\n", value);
+                }
+                break;
+            case 3:
+                if (root == NULL) printf("Tree is empty.\n");
+                else { printf("Inorder Traversal: "); inorderTraversal(root); printf("\n"); }
+                break;
+            case 4:
+                if (root == NULL) printf("Tree is empty.\n");
+                else { printf("Preorder Traversal: "); preorderTraversal(root); printf("\n"); }
+                break;
+            case 5:
+                if (root == NULL) printf("Tree is empty.\n");
+                else { printf("Postorder Traversal: "); postorderTraversal(root); printf("\n"); }
+                break;
+            case 6:
+                printf("Exiting program.\n");
+                freeTreeBST(root);
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 6 (Complex): AVL Tree -->
+    <h2>6. AVL Tree (Creation, Deletion, Traversal)</h2>
+    <p class="menu-note important">AVL trees are complex. This is a simplified implementation for educational purposes. Full deletion with all rotation cases can be quite involved.</p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+struct AVLNode {
+    int data;
+    struct AVLNode *left;
+    struct AVLNode *right;
+    int height; // Height of the node
+};
+
+// Helper function: get height of a node
+int height(struct AVLNode *N) {
+    if (N == NULL)
+        return 0; // Height of NULL node is 0 (or -1 depending on convention, using 0 for easier balance factor)
+    return N->height;
+}
+
+// Helper function: get maximum of two integers
+int max_avl(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+// Function to create a new AVL node
+struct AVLNode* createAVLNode(int value) {
+    struct AVLNode* node = (struct AVLNode*)malloc(sizeof(struct AVLNode));
+    node->data = value;
+    node->left = NULL;
+    node->right = NULL;
+    node->height = 1; // New node is initially added at leaf, height is 1
+    return node;
+}
+
+// Right rotate subtree rooted with y
+struct AVLNode *rightRotate(struct AVLNode *y) {
+    struct AVLNode *x = y->left;
+    struct AVLNode *T2 = x->right;
+
+    // Perform rotation
+    x->right = y;
+    y->left = T2;
+
+    // Update heights
+    y->height = max_avl(height(y->left), height(y->right)) + 1;
+    x->height = max_avl(height(x->left), height(x->right)) + 1;
+
+    return x; // New root
+}
+
+// Left rotate subtree rooted with x
+struct AVLNode *leftRotate(struct AVLNode *x) {
+    struct AVLNode *y = x->right;
+    struct AVLNode *T2 = y->left;
+
+    // Perform rotation
+    y->left = x;
+    x->right = T2;
+
+    // Update heights
+    x->height = max_avl(height(x->left), height(x->right)) + 1;
+    y->height = max_avl(height(y->left), height(y->right)) + 1;
+    
+    return y; // New root
+}
+
+// Get Balance factor of node N
+int getBalance(struct AVLNode *N) {
+    if (N == NULL)
+        return 0;
+    return height(N->left) - height(N->right);
+}
+
+// Insert a node into AVL tree
+struct AVLNode* insertAVLNode(struct AVLNode* node, int value) {
+    // 1. Perform standard BST insertion
+    if (node == NULL)
+        return(createAVLNode(value));
+
+    if (value &lt; node->data)
+        node->left = insertAVLNode(node->left, value);
+    else if (value > node->data)
+        node->right = insertAVLNode(node->right, value);
+    else // Equal values are not allowed in this simple AVL
+        return node;
+
+    // 2. Update height of this ancestor node
+    node->height = 1 + max_avl(height(node->left), height(node->right));
+
+    // 3. Get the balance factor of this ancestor node to check if it became unbalanced
+    int balance = getBalance(node);
+
+    // If node becomes unbalanced, then there are 4 cases
+
+    // Left Left Case
+    if (balance > 1 && value &lt; node->left->data)
+        return rightRotate(node);
+
+    // Right Right Case
+    if (balance &lt; -1 && value > node->right->data)
+        return leftRotate(node);
+
+    // Left Right Case
+    if (balance > 1 && value > node->left->data) {
+        node->left = leftRotate(node->left);
+        return rightRotate(node);
+    }
+
+    // Right Left Case
+    if (balance &lt; -1 && value &lt; node->right->data) {
+        node->right = rightRotate(node->right);
+        return leftRotate(node);
+    }
+
+    // Return the (unchanged) node pointer if no rotation needed
+    return node;
+}
+
+// Find minimum node (for deletion) - same as BST
+struct AVLNode* findMinAVL(struct AVLNode* node) {
+    struct AVLNode* current = node;
+    while (current->left != NULL)
+        current = current->left;
+    return current;
+}
+
+// Delete a node from AVL tree
+struct AVLNode* deleteAVLNode(struct AVLNode* root, int value) {
+    // 1. Perform standard BST delete
+    if (root == NULL)
+        return root;
+
+    if (value &lt; root->data)
+        root->left = deleteAVLNode(root->left, value);
+    else if (value > root->data)
+        root->right = deleteAVLNode(root->right, value);
+    else { // Node to be deleted is found
+        // Node with only one child or no child
+        if ((root->left == NULL) || (root->right == NULL)) {
+            struct AVLNode *temp = root->left ? root->left : root->right;
+            if (temp == NULL) { // No child case
+                temp = root;
+                root = NULL;
+            } else { // One child case
+                *root = *temp; // Copy the contents of the non-empty child
+            }
+            free(temp);
+        } else { // Node with two children
+            struct AVLNode* temp = findMinAVL(root->right); // Get inorder successor
+            root->data = temp->data; // Copy data
+            root->right = deleteAVLNode(root->right, temp->data); // Delete inorder successor
+        }
+    }
+
+    if (root == NULL) // If tree had only one node
+      return root;
+
+    // 2. Update height
+    root->height = 1 + max_avl(height(root->left), height(root->right));
+
+    // 3. Get balance factor
+    int balance = getBalance(root);
+
+    // Rebalance (4 cases, similar to insertion)
+    // Left Left Case
+    if (balance > 1 && getBalance(root->left) >= 0)
+        return rightRotate(root);
+
+    // Left Right Case
+    if (balance > 1 && getBalance(root->left) &lt; 0) {
+        root->left = leftRotate(root->left);
+        return rightRotate(root);
+    }
+
+    // Right Right Case
+    if (balance &lt; -1 && getBalance(root->right) &lt;= 0)
+        return leftRotate(root);
+
+    // Right Left Case
+    if (balance &lt; -1 && getBalance(root->right) > 0) {
+        root->right = rightRotate(root->right);
+        return leftRotate(root);
+    }
+
+    return root;
+}
+
+// Preorder traversal (for displaying the tree structure)
+void preorderAVL(struct AVLNode *root) {
+    if(root != NULL) {
+        printf("%d(H%d,B%d) ", root->data, root->height, getBalance(root));
+        preorderAVL(root->left);
+        preorderAVL(root->right);
+    }
+}
+// Inorder traversal
+void inorderAVL(struct AVLNode *root) {
+    if(root != NULL) {
+        inorderAVL(root->left);
+        printf("%d ", root->data);
+        inorderAVL(root->right);
+    }
+}
+
+
+// Function to free the tree (post-order traversal for deletion)
+void freeAVLTree(struct AVLNode* root) {
+    if (root == NULL) return;
+    freeAVLTree(root->left);
+    freeAVLTree(root->right);
+    free(root);
+}
+
+int main() {
+    struct AVLNode *root = NULL;
+    int choice, value;
+
+    while(1) {
+        printf("\n\n--- AVL Tree Menu ---\n");
+        printf("1. Insert Node\n");
+        printf("2. Delete Node\n");
+        printf("3. Preorder Traversal (with Height & Balance)\n");
+        printf("4. Inorder Traversal\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                root = insertAVLNode(root, value);
+                printf("%d inserted.\n", value);
+                break;
+            case 2:
+                if (root == NULL) {
+                    printf("Tree is empty. Cannot delete.\n");
+                } else {
+                    printf("Enter value to delete: ");
+                    scanf("%d", &value);
+                    root = deleteAVLNode(root, value);
+                    printf("Attempted to delete %d.\n", value);
+                }
+                break;
+            case 3:
+                if (root == NULL) printf("Tree is empty.\n");
+                else { printf("Preorder Traversal: "); preorderAVL(root); printf("\n"); }
+                break;
+            case 4:
+                 if (root == NULL) printf("Tree is empty.\n");
+                else { printf("Inorder Traversal: "); inorderAVL(root); printf("\n"); }
+                break;
+            case 5:
+                printf("Exiting program.\n");
+                freeAVLTree(root);
+                exit(0);
+            default:
+                printf("Invalid choice.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 7 (Complex): Count Leaf Nodes -->
+    <h2>7. Count the number of leaf nodes in a tree</h2>
+    <p class="menu-note">This will use a simple Binary Tree (like BST for creation convenience). A leaf node is a node with no children.</p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+// Using TreeNode structure from BST for convenience
+struct TreeNode {
+    int data;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+
+// Create node function (same as BST)
+struct TreeNode* createNodeLeafCount(int value) {
+    struct TreeNode* newNode = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    newNode->data = value;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+// Insert node function (BST insert, same as BST program)
+struct TreeNode* insertNodeLeafCount(struct TreeNode* root, int value) {
+    if (root == NULL) {
+        return createNodeLeafCount(value);
+    }
+    if (value &lt; root->data) {
+        root->left = insertNodeLeafCount(root->left, value);
+    } else if (value > root->data) {
+        root->right = insertNodeLeafCount(root->right, value);
+    }
+    return root;
+}
+
+// Function to count leaf nodes
+int countLeafNodes(struct TreeNode* root) {
+    if (root == NULL) {
+        return 0; // No leaf nodes in an empty tree
+    }
+    if (root->left == NULL && root->right == NULL) {
+        return 1; // This node is a leaf node
+    }
+    // Recursively count leaf nodes in left and right subtrees
+    return countLeafNodes(root->left) + countLeafNodes(root->right);
+}
+
+// Inorder traversal for display
+void inorderDisplay(struct TreeNode* root) {
+    if (root != NULL) {
+        inorderDisplay(root->left);
+        printf("%d ", root->data);
+        inorderDisplay(root->right);
+    }
+}
+
+// Function to free the tree (post-order traversal for deletion)
+void freeTreeLeafCount(struct TreeNode* root) {
+    if (root == NULL) return;
+    freeTreeLeafCount(root->left);
+    freeTreeLeafCount(root->right);
+    free(root);
+}
+
+
+int main() {
+    struct TreeNode* root = NULL;
+    int choice, value, leafCount;
+
+    while (1) {
+        printf("\n--- Count Leaf Nodes in Binary Tree Menu ---\n");
+        printf("1. Insert Node (into BST to build tree)\n");
+        printf("2. Count Leaf Nodes\n");
+        printf("3. Display Tree (Inorder)\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                root = insertNodeLeafCount(root, value);
+                printf("%d inserted.\n", value);
+                break;
+            case 2:
+                leafCount = countLeafNodes(root);
+                printf("Number of leaf nodes in the tree: %d\n", leafCount);
+                break;
+            case 3:
+                if (root == NULL) printf("Tree is empty.\n");
+                else { printf("Tree (Inorder): "); inorderDisplay(root); printf("\n");}
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                freeTreeLeafCount(root);
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 8 (Complex): DFS Graph Traversal -->
+    <h2>8. DFS Graph Traversal (Adjacency Matrix)</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define MAX_VERTICES 10 // Maximum number of vertices
+
+int adjMatrix[MAX_VERTICES][MAX_VERTICES];
+int visited[MAX_VERTICES];
+int numVertices;
+
+// Initialize graph (all edges to 0, visited to 0)
+void initGraph(int n) {
+    numVertices = n;
+    for (int i = 0; i &lt; numVertices; i++) {
+        visited[i] = 0; // Mark all vertices as not visited
+        for (int j = 0; j &lt; numVertices; j++) {
+            adjMatrix[i][j] = 0; // No edges initially
+        }
+    }
+}
+
+// Add an edge to the graph (for undirected graph)
+void addEdge(int u, int v) {
+    if (u >= 0 && u &lt; numVertices && v >= 0 && v &lt; numVertices) {
+        adjMatrix[u][v] = 1;
+        adjMatrix[v][u] = 1; // For undirected graph
+    } else {
+        printf("Invalid vertex for edge.\n");
+    }
+}
+
+// Depth First Search function
+void DFS(int vertex) {
+    printf("%d ", vertex); // Print the current vertex
+    visited[vertex] = 1;  // Mark as visited
+
+    // Recur for all adjacent vertices that are not visited
+    for (int i = 0; i &lt; numVertices; i++) {
+        if (adjMatrix[vertex][i] == 1 && visited[i] == 0) {
+            DFS(i);
+        }
+    }
+}
+
+// Function to perform DFS traversal starting from a given vertex
+void performDFS() {
+    int startVertex;
+    if (numVertices == 0) {
+        printf("Graph not initialized. Please create graph first.\n");
+        return;
+    }
+    // Reset visited array for a new DFS traversal
+    for (int i = 0; i &lt; numVertices; i++) {
+        visited[i] = 0;
+    }
+
+    printf("Enter starting vertex for DFS (0 to %d): ", numVertices - 1);
+    scanf("%d", &startVertex);
+
+    if (startVertex &lt; 0 || startVertex >= numVertices) {
+        printf("Invalid starting vertex.\n");
+        return;
+    }
+
+    printf("DFS Traversal starting from vertex %d: ", startVertex);
+    DFS(startVertex);
+
+    // Check for disconnected components
+    for (int i = 0; i < numVertices; i++) {
+        if (visited[i] == 0) {
+            printf("\n(Component starting from %d): ", i);
+            DFS(i);
+        }
+    }
+    printf("\n");
+}
+
+void displayAdjMatrix() {
+    if (numVertices == 0) {
+        printf("Graph not initialized.\n");
+        return;
+    }
+    printf("Adjacency Matrix:\n");
+    for (int i = 0; i < numVertices; i++) {
+        for (int j = 0; j < numVertices; j++) {
+            printf("%d ", adjMatrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int choice, n, u, v;
+    numVertices = 0; //  Graph not yet created
+
+    while (1) {
+        printf("\n--- DFS Graph Traversal Menu ---\n");
+        printf("1. Create Graph (Enter number of vertices)\n");
+        printf("2. Add Edge\n");
+        printf("3. Perform DFS Traversal\n");
+        printf("4. Display Adjacency Matrix\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter number of vertices (max %d): ", MAX_VERTICES);
+                scanf("%d", &n);
+                if (n > 0 && n &lt;= MAX_VERTICES) {
+                    initGraph(n);
+                    printf("Graph with %d vertices created.\n", n);
+                } else {
+                    printf("Invalid number of vertices.\n");
+                }
+                break;
+            case 2:
+                if (numVertices == 0) {
+                     printf("Graph not created yet.\n");
+                     break;
+                }
+                printf("Enter edge (u v, 0-indexed): ");
+                scanf("%d %d", &u, &v);
+                addEdge(u, v);
+                printf("Edge between %d and %d added.\n", u, v);
+                break;
+            case 3:
+                performDFS();
+                break;
+            case 4:
+                displayAdjMatrix();
+                break;
+            case 5:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 9 (Complex): BFS Graph Traversal -->
+    <h2>9. BFS Graph Traversal (Adjacency Matrix)</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define MAX_VERTICES_BFS 10
+#define MAX_QUEUE_BFS MAX_VERTICES_BFS // Queue size for BFS
+
+// Graph representation (same as DFS)
+int adjMatrix_bfs[MAX_VERTICES_BFS][MAX_VERTICES_BFS];
+int visited_bfs[MAX_VERTICES_BFS];
+int numVertices_bfs;
+
+// Simple Queue for BFS
+int queue_bfs[MAX_QUEUE_BFS];
+int front_bfs = -1, rear_bfs = -1;
+
+// Queue operations for BFS
+void enqueue_bfs(int vertex) {
+    if (rear_bfs == MAX_QUEUE_BFS - 1) {
+        // This simple queue doesn't handle wrap-around for BFS simplicity
+        printf("Queue is full (BFS internal error - should not happen with proper graph size)\n");
+        return;
+    }
+    if (front_bfs == -1) front_bfs = 0;
+    rear_bfs++;
+    queue_bfs[rear_bfs] = vertex;
+}
+
+int dequeue_bfs() {
+    if (front_bfs == -1 || front_bfs > rear_bfs) {
+        // printf("Queue is empty (BFS internal error)\n");
+        return -1; // Error or empty
+    }
+    int item = queue_bfs[front_bfs];
+    front_bfs++;
+    if (front_bfs > rear_bfs) { // Reset queue if empty
+        front_bfs = rear_bfs = -1;
+    }
+    return item;
+}
+
+int isQueueEmpty_bfs() {
+    return front_bfs == -1;
+}
+
+
+// Initialize graph (same as DFS)
+void initGraph_bfs(int n) {
+    numVertices_bfs = n;
+    for (int i = 0; i &lt; numVertices_bfs; i++) {
+        visited_bfs[i] = 0;
+        for (int j = 0; j &lt; numVertices_bfs; j++) {
+            adjMatrix_bfs[i][j] = 0;
+        }
+    }
+}
+
+// Add edge (same as DFS)
+void addEdge_bfs(int u, int v) {
+    if (u >= 0 && u &lt; numVertices_bfs && v >= 0 && v &lt; numVertices_bfs) {
+        adjMatrix_bfs[u][v] = 1;
+        adjMatrix_bfs[v][u] = 1;
+    } else {
+        printf("Invalid vertex for edge.\n");
+    }
+}
+
+// Breadth First Search function
+void BFS(int startVertex) {
+    // Reset visited array and queue for this BFS call
+    for (int i = 0; i &lt; numVertices_bfs; i++) {
+        visited_bfs[i] = 0;
+    }
+    front_bfs = rear_bfs = -1; // Reset queue
+
+    printf("%d ", startVertex);
+    visited_bfs[startVertex] = 1;
+    enqueue_bfs(startVertex);
+
+    while (!isQueueEmpty_bfs()) {
+        int currentVertex = dequeue_bfs();
+        if (currentVertex == -1) break; // Should not happen if logic is correct
+
+        for (int i = 0; i &lt; numVertices_bfs; i++) {
+            if (adjMatrix_bfs[currentVertex][i] == 1 && visited_bfs[i] == 0) {
+                printf("%d ", i);
+                visited_bfs[i] = 1;
+                enqueue_bfs(i);
+            }
+        }
+    }
+}
+
+// Function to perform BFS traversal
+void performBFS() {
+    int startVertex;
+     if (numVertices_bfs == 0) {
+        printf("Graph not initialized. Please create graph first.\n");
+        return;
+    }
+    printf("Enter starting vertex for BFS (0 to %d): ", numVertices_bfs - 1);
+    scanf("%d", &startVertex);
+
+    if (startVertex &lt; 0 || startVertex >= numVertices_bfs) {
+        printf("Invalid starting vertex.\n");
+        return;
+    }
+    
+    printf("BFS Traversal starting from vertex %d: ", startVertex);
+    BFS(startVertex); // Actual BFS logic
+
+    // Check for disconnected components (optional, but good practice)
+    // For a full traversal of all components:
+    // (This would require ensuring visited_bfs is globally reset once before iterating all nodes)
+    // Here, we are just showing BFS from a single start node.
+    // To handle disconnected graph for full traversal:
+    /*
+    for (int i = 0; i < numVertices_bfs; i++) {
+        visited_bfs[i] = 0; // Global reset
+    }
+    printf("BFS Traversal (handling disconnected components if any):\n");
+    for (int i = 0; i < numVertices_bfs; i++) {
+        if (visited_bfs[i] == 0) {
+            printf("Component starting from %d: ", i);
+            // BFS function itself should handle marking visited
+            // Re-initialize queue for each component's BFS
+            front_bfs = rear_bfs = -1;
+            
+            printf("%d ", i); // Print start of component
+            visited_bfs[i] = 1;
+            enqueue_bfs(i);
+
+            while (!isQueueEmpty_bfs()) {
+                int currentVertex = dequeue_bfs();
+                 for (int neighbor = 0; neighbor < numVertices_bfs; neighbor++) {
+                    if (adjMatrix_bfs[currentVertex][neighbor] == 1 && visited_bfs[neighbor] == 0) {
+                        printf("%d ", neighbor);
+                        visited_bfs[neighbor] = 1;
+                        enqueue_bfs(neighbor);
+                    }
+                }
+            }
+            printf("\n");
+        }
+    }
+    */
+    printf("\n");
+}
+
+void displayAdjMatrix_bfs() {
+    if (numVertices_bfs == 0) {
+        printf("Graph not initialized.\n");
+        return;
+    }
+    printf("Adjacency Matrix:\n");
+    for (int i = 0; i < numVertices_bfs; i++) {
+        for (int j = 0; j < numVertices_bfs; j++) {
+            printf("%d ", adjMatrix_bfs[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int choice, n, u, v;
+    numVertices_bfs = 0;
+
+    while (1) {
+        printf("\n--- BFS Graph Traversal Menu ---\n");
+        printf("1. Create Graph (Enter number of vertices)\n");
+        printf("2. Add Edge\n");
+        printf("3. Perform BFS Traversal\n");
+        printf("4. Display Adjacency Matrix\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter number of vertices (max %d): ", MAX_VERTICES_BFS);
+                scanf("%d", &n);
+                 if (n > 0 && n &lt;= MAX_VERTICES_BFS) {
+                    initGraph_bfs(n);
+                    printf("Graph with %d vertices created.\n", n);
+                } else {
+                    printf("Invalid number of vertices.\n");
+                }
+                break;
+            case 2:
+                 if (numVertices_bfs == 0) {
+                     printf("Graph not created yet.\n");
+                     break;
+                }
+                printf("Enter edge (u v, 0-indexed): ");
+                scanf("%d %d", &u, &v);
+                addEdge_bfs(u, v);
+                printf("Edge between %d and %d added.\n", u, v);
+                break;
+            case 3:
+                performBFS();
+                break;
+            case 4:
+                displayAdjMatrix_bfs();
+                break;
+            case 5:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 10 (Complex): Quick Sort -->
+    <h2>10. Quick Sort technique</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For exit()
+
+#define MAX_ARRAY_SIZE 20
+
+// Function to swap two elements
+void swap(int* a, int* b) {
+    int t = *a;
+    *a = *b;
+    *b = t;
+}
+
+// Partition function for Quick Sort
+// This implementation takes the last element as pivot
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high]; // Pivot element
+    int i = (low - 1);   // Index of smaller element
+
+    for (int j = low; j &lt;= high - 1; j++) {
+        // If current element is smaller than or equal to pivot
+        if (arr[j] &lt;= pivot) {
+            i++; // Increment index of smaller element
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]);
+    return (i + 1); // Return the partitioning index
+}
+
+// Quick Sort function
+void quickSort(int arr[], int low, int high) {
+    if (low &lt; high) {
+        // pi is partitioning index, arr[pi] is now at right place
+        int pi = partition(arr, low, high);
+
+        // Separately sort elements before partition and after partition
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+// Function to print an array
+void printArray(int arr[], int size) {
+    for (int i = 0; i &lt; size; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+}
+
+int main() {
+    int arr[MAX_ARRAY_SIZE];
+    int n = 0; // Number of elements currently in array
+    int choice, value;
+
+    while(1) {
+        printf("\n--- Quick Sort Menu ---\n");
+        printf("1. Add element to array\n");
+        printf("2. Display array\n");
+        printf("3. Perform Quick Sort\n");
+        printf("4. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                if (n >= MAX_ARRAY_SIZE) {
+                    printf("Array is full.\n");
+                } else {
+                    printf("Enter element to add: ");
+                    scanf("%d", &value);
+                    arr[n++] = value;
+                    printf("%d added.\n", value);
+                }
+                break;
+            case 2:
+                if (n == 0) printf("Array is empty.\n");
+                else {
+                    printf("Array: ");
+                    printArray(arr, n);
+                }
+                break;
+            case 3:
+                if (n == 0) {
+                    printf("Array is empty, nothing to sort.\n");
+                } else {
+                    printf("Original array: ");
+                    printArray(arr, n);
+                    quickSort(arr, 0, n - 1);
+                    printf("Sorted array: ");
+                    printArray(arr, n);
+                }
+                break;
+            case 4:
+                printf("Exiting.\n");
+                exit(0);
+            default:
+                printf("Invalid choice.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 11 (Complex): Merge Sort -->
+    <h2>11. Merge Sort technique</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // For exit()
+
+#define MAX_ARRAY_SIZE_MERGE 20
+
+// Merge function: Merges two subarrays of arr[]
+// First subarray is arr[l..m]
+// Second subarray is arr[m+1..r]
+void merge(int arr[], int l, int m, int r) {
+    int i, j, k;
+    int n1 = m - l + 1; // Size of left subarray
+    int n2 = r - m;     // Size of right subarray
+
+    // Create temporary arrays
+    int L[n1], R[n2];
+
+    // Copy data to temp arrays L[] and R[]
+    for (i = 0; i &lt; n1; i++)
+        L[i] = arr[l + i];
+    for (j = 0; j &lt; n2; j++)
+        R[j] = arr[m + 1 + j];
+
+    // Merge the temp arrays back into arr[l..r]
+    i = 0; // Initial index of first subarray
+    j = 0; // Initial index of second subarray
+    k = l; // Initial index of merged subarray
+    while (i &lt; n1 && j &lt; n2) {
+        if (L[i] &lt;= R[j]) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Copy the remaining elements of L[], if there are any
+    while (i &lt; n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    // Copy the remaining elements of R[], if there are any
+    while (j &lt; n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+// Merge Sort function
+void mergeSort(int arr[], int l, int r) {
+    if (l &lt; r) {
+        // Same as (l+r)/2, but avoids overflow for large l and h
+        int m = l + (r - l) / 2;
+
+        // Sort first and second halves
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+
+        // Merge the sorted halves
+        merge(arr, l, m, r);
+    }
+}
+
+// Function to print an array
+void printArrayMerge(int arr[], int size) {
+    for (int i = 0; i &lt; size; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+}
+
+int main() {
+    int arr[MAX_ARRAY_SIZE_MERGE];
+    int n = 0;
+    int choice, value;
+
+    while(1) {
+        printf("\n--- Merge Sort Menu ---\n");
+        printf("1. Add element to array\n");
+        printf("2. Display array\n");
+        printf("3. Perform Merge Sort\n");
+        printf("4. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                if (n >= MAX_ARRAY_SIZE_MERGE) {
+                    printf("Array is full.\n");
+                } else {
+                    printf("Enter element to add: ");
+                    scanf("%d", &value);
+                    arr[n++] = value;
+                    printf("%d added.\n", value);
+                }
+                break;
+            case 2:
+                 if (n == 0) printf("Array is empty.\n");
+                else {
+                    printf("Array: ");
+                    printArrayMerge(arr, n);
+                }
+                break;
+            case 3:
+                if (n == 0) {
+                    printf("Array is empty, nothing to sort.\n");
+                } else {
+                    printf("Original array: ");
+                    printArrayMerge(arr, n);
+                    mergeSort(arr, 0, n - 1);
+                    printf("Sorted array: ");
+                    printArrayMerge(arr, n);
+                }
+                break;
+            case 4:
+                printf("Exiting.\n");
+                exit(0);
+            default:
+                printf("Invalid choice.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 12 (Complex): Boyer-Moore -->
+    <h2>12. Boyer-Moore pattern matching algorithm</h2>
+    <p class="menu-note important">Boyer-Moore can be complex. This is a simplified version focusing on the Bad Character Heuristic. The Good Suffix Heuristic is omitted for simplicity.</p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt; // For exit
+
+#define NO_OF_CHARS 256 // Assuming ASCII characters
+
+// Function to precompute the Bad Character Heuristic table
+// For each character, it stores the last occurrence index in the pattern.
+// If character is not present, it stores -1.
+void badCharHeuristic(char *str, int size, int badchar[NO_OF_CHARS]) {
+    int i;
+    // Initialize all occurrences as -1
+    for (i = 0; i &lt; NO_OF_CHARS; i++)
+        badchar[i] = -1;
+
+    // Fill the actual value of last occurrence of a character
+    for (i = 0; i &lt; size; i++)
+        badchar[(int) str[i]] = i;
+}
+
+// Boyer-Moore search function (simplified with Bad Character Heuristic only)
+void searchBoyerMoore(char *txt, char *pat) {
+    int m = strlen(pat); // Length of pattern
+    int n = strlen(txt); // Length of text
+
+    if (m == 0 || n == 0 || m > n) {
+        printf("Invalid input for pattern matching.\n");
+        if (m==0) printf("Pattern is empty.\n");
+        if (n==0) printf("Text is empty.\n");
+        if (m>n && n!=0 && m!=0) printf("Pattern is longer than text.\n");
+        return;
+    }
+
+
+    int badchar[NO_OF_CHARS];
+    badCharHeuristic(pat, m, badchar);
+
+    int s = 0; // s is shift of the pattern with respect to text
+    int found = 0;
+
+    while (s &lt;= (n - m)) {
+        int j = m - 1; // Start comparing from the rightmost character of pattern
+
+        // Keep reducing index j of pattern while characters of
+        // pattern and text are matching at this shift s
+        while (j >= 0 && pat[j] == txt[s + j])
+            j--;
+
+        // If the pattern is present at current shift, then index j
+        // will become -1 after the above loop
+        if (j &lt; 0) {
+            printf("Pattern found at index %d\n", s);
+            found = 1;
+
+            // Shift the pattern so that the next character in text
+            // aligns with the last occurrence of it in pattern.
+            // The condition s+m &lt; n is necessary for the case when
+            // pattern occurs at the end of text
+            s += (s + m &lt; n) ? m - badchar[(int)txt[s + m]] : 1;
+            // If badchar[txt[s+m]] is -1 (char not in pattern), this effectively shifts by m.
+            // If char is in pattern, it shifts to align.
+            // A simple s += m; would also work if you only want the first occurrence or non-overlapping.
+            // For finding all occurrences (potentially overlapping), more sophisticated shift based on Good Suffix
+            // or carefully using Bad Char is needed. This simplified version might miss overlapping patterns
+            // if the shift is always 'm'. The current badchar shift logic is generally okay.
+            // A common simple shift after a match is s += 1; but this is less efficient.
+            // The shift s += (s + m < n) ? m - badchar[txt[s + m]] : 1; is a standard Bad Character rule application.
+
+        } else {
+            // Shift the pattern so that the bad character in text
+            // aligns with the last occurrence of it in pattern. The
+            // max function is used to make sure that we get a positive shift.
+            // We may get a negative shift if the last occurrence
+            // of bad character in pattern is on the right side of the
+            // current character.
+            int bc_shift = badchar[(int)txt[s + j]];
+            s += (j - bc_shift > 1) ? (j - bc_shift) : 1; // Ensure positive shift
+                                                          // Max(1, j - badchar[txt[s+j]])
+        }
+    }
+    if (!found) {
+        printf("Pattern not found in the text.\n");
+    }
+}
+
+
+int main() {
+    char txt[200], pat[50];
+    int choice;
+
+    while(1) {
+        printf("\n--- Boyer-Moore Pattern Matching Menu ---\n");
+        printf("1. Enter Text and Pattern, then Search\n");
+        printf("2. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+        // Clear input buffer (especially after scanf %d for next fgets or scanf %s)
+        while(getchar() != '\n'); 
+
+        switch(choice) {
+            case 1:
+                printf("Enter the text: ");
+                // scanf(" %[^\n]s", txt); // Reads string with spaces, note the leading space
+                fgets(txt, sizeof(txt), stdin);
+                txt[strcspn(txt, "\n")] = 0; // Remove trailing newline if present from fgets
+
+                printf("Enter the pattern to search: ");
+                // scanf(" %[^\n]s", pat);
+                fgets(pat, sizeof(pat), stdin);
+                pat[strcspn(pat, "\n")] = 0; // Remove trailing newline
+                
+                printf("\nSearching for pattern '%s' in text '%s':\n", pat, txt);
+                searchBoyerMoore(txt, pat);
+                break;
+            case 2:
+                printf("Exiting.\n");
+                exit(0);
+            default:
+                printf("Invalid choice.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 13 (Complex): Brute Force Pattern Matching -->
+    <h2>13. Brute Force pattern matching algorithm</h2>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt; // For exit()
+
+// Brute-force pattern matching function
+void bruteForceSearch(char *text, char *pattern) {
+    int n = strlen(text);
+    int m = strlen(pattern);
+    int i, j;
+    int found = 0;
+
+    if (m == 0 || n == 0 || m > n) {
+        printf("Invalid input for pattern matching.\n");
+         if (m==0) printf("Pattern is empty.\n");
+        if (n==0) printf("Text is empty.\n");
+        if (m>n && n!=0 && m!=0) printf("Pattern is longer than text.\n");
+        return;
+    }
+
+    // Slide the pattern one by one over the text
+    for (i = 0; i &lt;= n - m; i++) {
+        // For current index i, check for pattern match
+        for (j = 0; j &lt; m; j++) {
+            if (text[i + j] != pattern[j]) {
+                break; // Mismatch, break from inner loop
+            }
+        }
+        if (j == m) { // If inner loop completed, pattern is found
+            printf("Pattern found at index %d\n", i);
+            found = 1;
+            // To find only the first occurrence, you can add 'return;' here.
+            // To find all occurrences, let the loop continue.
+        }
+    }
+
+    if (!found) {
+        printf("Pattern not found in the text.\n");
+    }
+}
+
+int main() {
+    char text[200], pattern[50];
+    int choice;
+
+    while(1) {
+        printf("\n--- Brute Force Pattern Matching Menu ---\n");
+        printf("1. Enter Text and Pattern, then Search\n");
+        printf("2. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+        while(getchar() != '\n'); // Clear input buffer
+
+        switch(choice) {
+            case 1:
+                printf("Enter the text: ");
+                fgets(text, sizeof(text), stdin);
+                text[strcspn(text, "\n")] = 0; // Remove trailing newline
+
+                printf("Enter the pattern to search: ");
+                fgets(pattern, sizeof(pattern), stdin);
+                pattern[strcspn(pattern, "\n")] = 0; // Remove trailing newline
+                
+                printf("\nSearching for pattern '%s' in text '%s':\n", pattern, text);
+                bruteForceSearch(text, pattern);
+                break;
+            case 2:
+                printf("Exiting.\n");
+                exit(0);
+            default:
+                printf("Invalid choice.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <!-- Program 14 (Complex): Circular Queue ADT using Linked List -->
+    <h2>14. Circular Queue ADT using Linked List</h2>
+    <p class="menu-note">This is similar to a regular linked list queue, but the `rear->next` points back to `front`.</p>
+    <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+// Node structure for Circular Queue
+struct CQueueNode {
+    int data;
+    struct CQueueNode* next;
+};
+
+struct CQueueNode* front_cq_ll = NULL;
+struct CQueueNode* rear_cq_ll = NULL;
+
+// Function to check if the circular queue is empty
+int isEmpty_cq_ll() {
+    return front_cq_ll == NULL;
+}
+
+// Function to enqueue (add) an element
+void enqueue_cq_ll() {
+    int value;
+    printf("Enter value to enqueue: ");
+    scanf("%d", &value);
+
+    struct CQueueNode* newNode = (struct CQueueNode*)malloc(sizeof(struct CQueueNode));
+    if (!newNode) {
+        printf("Memory allocation failed! Queue might be full.\n");
+        return;
+    }
+    newNode->data = value;
+
+    if (isEmpty_cq_ll()) { // If queue is empty
+        front_cq_ll = newNode;
+        rear_cq_ll = newNode;
+        rear_cq_ll->next = front_cq_ll; // Points to itself to make it circular
+    } else {
+        rear_cq_ll->next = newNode;   // Current rear points to new node
+        rear_cq_ll = newNode;         // New node becomes the rear
+        rear_cq_ll->next = front_cq_ll; // New rear points to front to maintain circularity
+    }
+    printf("%d enqueued.\n", value);
+}
+
+// Function to dequeue (remove) an element
+void dequeue_cq_ll() {
+    if (isEmpty_cq_ll()) {
+        printf("Queue is empty! Cannot dequeue.\n");
+        return;
+    }
+
+    struct CQueueNode* temp = front_cq_ll;
+    int dequeuedValue = temp->data;
+
+    if (front_cq_ll == rear_cq_ll) { // If only one node in the queue
+        front_cq_ll = NULL;
+        rear_cq_ll = NULL;
+    } else {
+        front_cq_ll = front_cq_ll->next; // Move front to the next node
+        rear_cq_ll->next = front_cq_ll;  // Update rear's next to point to the new front
+    }
+    free(temp);
+    printf("%d dequeued.\n", dequeuedValue);
+}
+
+// Function to display the elements of the circular queue
+void display_cq_ll() {
+    if (isEmpty_cq_ll()) {
+        printf("Queue is empty.\n");
+        return;
+    }
+    struct CQueueNode* temp = front_cq_ll;
+    printf("Circular Queue (Linked List): ");
+    do {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    } while (temp != front_cq_ll); // Loop until we are back at the front
+    printf("(loops back to %d)\n", front_cq_ll->data);
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\n--- Circular Queue Menu (Linked List Implementation) ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Display Queue\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: enqueue_cq_ll(); break;
+            case 2: dequeue_cq_ll(); break;
+            case 3: display_cq_ll(); break;
+            case 4:
+                printf("Exiting program.\n");
+                // Free all nodes
+                if (!isEmpty_cq_ll()) {
+                    struct CQueueNode* current = front_cq_ll;
+                    rear_cq_ll->next = NULL; // Break the circle to stop loop
+                    while(current != NULL) {
+                        struct CQueueNode* tempNode = current;
+                        current = current->next;
+                        free(tempNode);
+                    }
+                }
+                exit(0);
+            default: printf("Invalid choice.\n");
+        }
+    }
+    return 0;
+}
+    </code></pre>
+
+    <p style="text-align:center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc;">
+        End of Program List.
+    </p>
+
+</body>
+</html>
+```
+
+**How to use this HTML file:**
+
+1.  Copy the entire content above.
+2.  Paste it into a new file.
+3.  Save the file with an `.html` extension (e.g., `ds_programs.html`).
+4.  Open this `ds_programs.html` file in any web browser (like Chrome, Firefox, Edge).
+
+You will see a formatted page with each C program clearly displayed in a code block, ready to be copied and compiled.
+
+**Important Considerations about the "Child Level" Simplicity:**
+
+*   **Error Handling:** It's very basic (e.g., checking for full/empty conditions). Robust applications would have more comprehensive error checking.
+*   **Input Validation:** Assumes the user enters valid input types (integers when expected, etc.).
+*   **Fixed Sizes:** Array-based structures use `#define MAX_SIZE`. In real scenarios, dynamic resizing or more flexible memory management might be used.
+*   **Global Variables:** Some programs use global variables (like `head` for linked lists, `top` for stacks) for simplicity in a menu-driven context. In larger programs, passing these as parameters to functions is often better practice to improve modularity and reduce side effects.
+*   **AVL Tree and Boyer-Moore:** These are inherently more complex. I've simplified them as much as possible while retaining their core logic. The AVL tree deletion, in particular, can have many cases if fully implemented with all rotations; the provided one is a common, somewhat simplified version. Boyer-Moore only uses the Bad Character Heuristic.
+*   **No `struct` for array-based Stack/Queue ADT:** As requested, the array-based stack and queue use global arrays and `top`/`front`/`rear` integers directly, not a `struct` to encapsulate them (which would be a more common ADT approach). This was a specific constraint for "simplicity."
+
+This set of programs should serve well for understanding the basic implementations as requested for a lab internal exam.
